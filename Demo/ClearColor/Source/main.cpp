@@ -42,8 +42,8 @@ int main(int argc, char * argv[]) {
     printf("framebuffer size: %d x %d\n", w, h);
 
     // Background Fill Color
-    glClearColor(1.0f, 0, 0, 1.0f);
-    // glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
+    // glClearColor(1.0f, 0, 0, 1.0f);
+    glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
         if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
