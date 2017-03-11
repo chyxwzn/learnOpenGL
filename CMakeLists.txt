@@ -36,7 +36,7 @@ endforeach()
 set(${result} ${dirlist})
 endmacro()
 
-SUBDIRLIST(SUBDIRS Demos)
+SUBDIRLIST(SUBDIRS Demo)
 foreach(subdir ${SUBDIRS})
 add_subdirectory(${subdir})
 endforeach()

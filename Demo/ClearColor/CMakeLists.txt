@@ -20,13 +20,13 @@ include_directories(../../Common/
                     ../../Vendor/stb/)
 
 file(GLOB PROJECT_SOURCES ../../Common/*.cpp
-                          sources/*.cpp)
+                          Source/*.cpp)
 
-file(GLOB PROJECT_SHADERS shaders/*.comp
-                          shaders/*.frag
-                          shaders/*.geom
-                          shaders/*.vert)
-file(GLOB PROJECT_RESOURCES resources/*)
+file(GLOB PROJECT_SHADERS Shader/*.comp
+                          Shader/*.frag
+                          Shader/*.geom
+                          Shader/*.vert)
+file(GLOB PROJECT_RESOURCES Resource/*)
 
 source_group("Sources" FILES ${PROJECT_SOURCES})
 source_group("Resources" FILES ${PROJECT_RESOURCES})
