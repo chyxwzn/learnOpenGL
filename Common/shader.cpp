@@ -7,7 +7,7 @@
 #include <memory>
 
 // Define Namespace
-namespace Mirage
+namespace Common
 {
     Shader & Shader::activate()
     {
@@ -19,17 +19,19 @@ namespace Mirage
     void Shader::bind(unsigned int location, glm::mat4 const & matrix)
     { glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix)); }
 
-    Shader & Shader::attach(std::string const & filename)
+    Shader & Shader::attach(std::string const & sourcePath, std::string const & filename)
     {
+        auto index = sourcePath.rfind("Source");
+        auto projPath = sourcePath.substr(0, index);
+        auto shaderPath = projPath + "Shader/" + filename;
         // Load GLSL Shader Source from File
-        std::string path = PROJECT_SOURCE_DIR "/Mirage/Shaders/";
-        std::ifstream fd(path + filename);
+        std::ifstream fd(shaderPath);
         auto src = std::string(std::istreambuf_iterator<char>(fd),
                               (std::istreambuf_iterator<char>()));
 
         // Create a Shader Object
         const char * source = src.c_str();
-        auto shader = create(filename);
+        auto shader = create(shaderPath);
         glShaderSource(shader, 1, & source, nullptr);
         glCompileShader(shader);
         glGetShaderiv(shader, GL_COMPILE_STATUS, & mStatus);

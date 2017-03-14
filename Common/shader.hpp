@@ -9,7 +9,7 @@
 #include <string>
 
 // Define Namespace
-namespace Mirage
+namespace Common
 {
     class Shader
     {
@@ -21,7 +21,7 @@ namespace Mirage
 
         // Public Member Functions
         Shader & activate();
-        Shader & attach(std::string const & filename);
+        Shader & attach(std::string const & sourcePath, std::string const & filename);
         GLuint   create(std::string const & filename);
         GLuint   get() { return mProgram; }
         Shader & link();
