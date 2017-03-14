@@ -47,13 +47,13 @@ int main(int argc, char * argv[]) {
     GLuint VAO, VBO;
     GLfloat vertices[] = {
         // First triangle
-        -0.9f, -0.5f, 0.0f,  // Left 
-        -0.0f, -0.5f, 0.0f,  // Right
-        -0.45f, 0.5f, 0.0f,  // Top 
+        0.0f, 1.0f, 0.0f,  // Top 
+        0.5f, 0.0f, 0.0f,  // Right
+        -0.5f, 0.0f, 0.0f,  // Left 
         // Second triangle
-        0.0f, -0.5f, 0.0f,  // Left
-        0.9f, -0.5f, 0.0f,  // Right
-        0.45f, 0.5f, 0.0f   // Top 
+        0.0f, 0.0f, 0.0f,  // Top 
+        0.5f, -1.0f, 0.0f,  // Right
+        -0.5f, -1.0f, 0.0f,  // Left 
     };
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
