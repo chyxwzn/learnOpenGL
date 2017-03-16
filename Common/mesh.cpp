@@ -8,7 +8,7 @@
 #include <stb_image.h>
 
 // Define Namespace
-namespace Mirage
+namespace Common
 {
     Mesh::Mesh(std::string const & filename) : Mesh()
     {
@@ -22,8 +22,10 @@ namespace Mirage
 
         // Walk the Tree of Scene Nodes
         auto index = filename.find_last_of("/");
-        if (!scene) fprintf(stderr, "%s\n", loader.GetErrorString());
-        else parse(filename.substr(0, index), scene->mRootNode, scene);
+        if (!scene)
+            fprintf(stderr, "%s\n", loader.GetErrorString());
+        else
+            parse(filename.substr(0, index), scene->mRootNode, scene);
     }
 
     Mesh::Mesh(std::vector<Vertex> const & vertices,
@@ -68,7 +70,8 @@ namespace Mirage
     void Mesh::draw(GLuint shader)
     {
         unsigned int unit = 0, diffuse = 0, specular = 0;
-        for (auto &i : mSubMeshes) i->draw(shader);
+        for (auto &i : mSubMeshes)
+            i->draw(shader);
         for (auto &i : mTextures)
         {   // Set Correct Uniform Names Using Texture Type (Omit ID for 0th Texture)
             std::string uniform = i.second;
@@ -79,8 +82,9 @@ namespace Mirage
             glActiveTexture(GL_TEXTURE0 + unit);
             glBindTexture(GL_TEXTURE_2D, i.first);
             glUniform1f(glGetUniformLocation(shader, uniform.c_str()), ++unit);
-        }   glBindVertexArray(mVertexArray);
-            glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
+        }
+        glBindVertexArray(mVertexArray);
+        glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
     }
 
     void Mesh::parse(std::string const & path, aiNode const * node, aiScene const * scene)
@@ -96,18 +100,19 @@ namespace Mirage
         // Create Vertex Data from Mesh Node
         std::vector<Vertex> vertices; Vertex vertex;
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-        {   if (mesh->mTextureCoords[0])
-            vertex.uv       = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+        {
+            if (mesh->mTextureCoords[0])
+                vertex.uv = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
             vertex.position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-            vertex.normal   = glm::vec3(mesh->mNormals[i].x,  mesh->mNormals[i].y,  mesh->mNormals[i].z);
+            vertex.normal = glm::vec3(mesh->mNormals[i].x,  mesh->mNormals[i].y,  mesh->mNormals[i].z);
             vertices.push_back(vertex);
         }
 
         // Create Mesh Indices for Indexed Drawing
         std::vector<GLuint> indices;
         for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-        for (unsigned int j = 0; j < mesh->mFaces[i].mNumIndices; j++)
-            indices.push_back(mesh->mFaces[i].mIndices[j]);
+            for (unsigned int j = 0; j < mesh->mFaces[i].mNumIndices; j++)
+                indices.push_back(mesh->mFaces[i].mIndices[j]);
 
         // Load Mesh Textures into VRAM
         std::map<GLuint, std::string> textures;
@@ -137,14 +142,18 @@ namespace Mirage
             std::string filename = str.C_Str(); int width, height, channels;
             filename = PROJECT_SOURCE_DIR "/Mirage/Models/" + path + "/" + filename;
             unsigned char * image = stbi_load(filename.c_str(), & width, & height, & channels, 0);
-            if (!image) fprintf(stderr, "%s %s\n", "Failed to Load Texture", filename.c_str());
+            if (!image)
+                fprintf(stderr, "%s %s\n", "Failed to Load Texture", filename.c_str());
 
             // Set the Correct Channel Format
             switch (channels)
             {
-                case 1 : format = GL_ALPHA;     break;
-                case 3 : format = GL_RGB;       break;
-                case 4 : format = GL_RGBA;      break;
+                case 1 : format = GL_ALPHA;
+                         break;
+                case 3 : format = GL_RGB;
+                         break;
+                case 4 : format = GL_RGBA;
+                         break;
             }
 
             // Bind Texture and Set Filtering Levels
@@ -160,9 +169,12 @@ namespace Mirage
 
             // Release Image Pointer and Store the Texture
             stbi_image_free(image);
-                 if (type == aiTextureType_DIFFUSE)  mode = "diffuse";
-            else if (type == aiTextureType_SPECULAR) mode = "specular";
+            if (type == aiTextureType_DIFFUSE)
+                mode = "diffuse";
+            else if (type == aiTextureType_SPECULAR)
+                mode = "specular";
             textures.insert(std::make_pair(texture, mode));
-        }   return textures;
+        }
+        return textures;
     }
 };
