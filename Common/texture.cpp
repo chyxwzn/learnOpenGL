@@ -9,7 +9,7 @@
 namespace Common
 {
 
-    GLuint Texture::mSamplerIdx = 0;
+    GLuint Texture::mUnitIdx = 0;
 
     Texture::Texture(std::string const& path, std::string const& filename)
     {
@@ -46,17 +46,22 @@ namespace Common
         // Release Image Pointer and Store the Texture
         stbi_image_free(image);
         glBindTexture(GL_TEXTURE_2D, 0);
-        mSampler = mSamplerIdx++;
-        std::cout << "mTexture:" << mTexture << ", mSampler:" << mSampler << ", mSamplerIdx:" << mSamplerIdx << std::endl;
-        std::cout << "texture" + std::to_string(mSampler) << std::endl;
+        mUnit = mUnitIdx++;
+        // std::cout << "mTexture:" << mTexture << ", mUnit:" << mUnit << ", mUnitIdx:" << mUnitIdx << std::endl;
+        // std::cout << "texture" + std::to_string(mUnit) << ", max:" << GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS <<  std::endl;
+    }
+
+    Texture::~Texture()
+    {
+        glDeleteTextures(1, &mTexture);
     }
 
     void Texture::activate(GLuint shader)
     {
-        std::string uniform = "texture" + std::to_string(mSampler);
-        glActiveTexture(GL_TEXTURE0 + mSampler);
+        std::string uniform = "texture" + std::to_string(mUnit+1);
+        glUniform1f(glGetUniformLocation(shader, uniform.c_str()), mUnit);
+        glActiveTexture(GL_TEXTURE0 + mUnit);
         glBindTexture(GL_TEXTURE_2D, mTexture);
-        glUniform1f(glGetUniformLocation(shader, uniform.c_str()), mSampler);
     }
 
 };

@@ -9,10 +9,11 @@ namespace Common
     {
     public:
         Texture(std::string const& path, std::string const& filename);
+        ~Texture();
         void activate(GLuint shader);
-        static GLuint mSamplerIdx;
+        static GLuint mUnitIdx;
     private:
         GLuint mTexture;
-        GLuint mSampler;
+        GLuint mUnit;
     };
 };

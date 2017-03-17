@@ -4,10 +4,10 @@ in vec3 vertColor;
 in vec2 texUV;
 out vec4 color;
 
-uniform sampler2D texture0;
-uniform sampler2D texture1;
+uniform sampler2D tex1;
+uniform sampler2D tex2;
 
 void main()
 {
-    color = mix(texture(texture0, texUV), texture(texture1, texUV), 0.8);
+    color = mix(texture(tex1, texUV), texture(tex2, texUV), 0.8);
 }
