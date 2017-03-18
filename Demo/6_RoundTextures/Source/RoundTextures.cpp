@@ -79,14 +79,60 @@ int main(int argc, char * argv[]) {
     
     glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
     // Rendering Loop
+    GLfloat x = 0.75f, y = 0.75f, degree = 90.0f;
     while (glfwWindowShouldClose(mWindow) == false) {
         if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(mWindow, true);
 
         glClear(GL_COLOR_BUFFER_BIT);
-        shader.activate();
         container.activate(shader.get());
         awesomeface.activate(shader.get());
+        shader.activate();
+        glm::mat4 trans;
+        if (x == 0.75f && y > -0.75f && y < 0.75f)
+        {
+            degree = 90.0f;
+            y -= 0.01f;
+        }
+        if (y == -0.75f && x > -0.75f && x < 0.75f)
+        {
+            degree = 0.0f;
+            x -= 0.01f;
+        }
+        if (x == -0.75f && y > -0.75f && y < 0.75f)
+        {
+            degree = -90.0f;
+            y += 0.01f;
+        }
+        if (y == 0.75f && x > -0.75f && x < 0.75f)
+        {
+            degree = 180.0f;
+            x += 0.01f;
+        }
+        if (y <= -0.75f && x == 0.75f)
+        {
+            y = -0.75f;
+            x -= 0.01f;
+        }
+        if (x <= -0.75f && y == -0.75f)
+        {
+            x = -0.75f;
+            y += 0.01f;
+        }
+        if (y >= 0.75f && x == -0.75f)
+        {
+            y = 0.75f;
+            x += 0.01f;
+        }
+        if (x >= 0.75f && y == 0.75f)
+        {
+            x = 0.75f;
+            y -= 0.01f;
+        }
+        trans = glm::translate(trans, glm::vec3(x, y, 0.0f));
+        trans = glm::rotate(trans, glm::radians(degree), glm::vec3(0.0, 0.0, 1.0));
+        trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+        glUniformMatrix4fv(glGetUniformLocation(shader.get(), "transform"), 1, GL_FALSE, glm::value_ptr(trans));
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
