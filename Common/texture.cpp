@@ -58,8 +58,8 @@ namespace Common
 
     void Texture::activate(GLuint shader)
     {
-        std::string uniform = "texture" + std::to_string(mUnit+1);
-        glUniform1f(glGetUniformLocation(shader, uniform.c_str()), mUnit);
+        std::string uniform = "tex" + std::to_string(mUnit+1);
+        glUniform1i(glGetUniformLocation(shader, uniform.c_str()), mUnit);
         glActiveTexture(GL_TEXTURE0 + mUnit);
         glBindTexture(GL_TEXTURE_2D, mTexture);
     }
