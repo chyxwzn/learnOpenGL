@@ -124,8 +124,8 @@ int main(int argc, char * argv[]) {
             glfwSetWindowShouldClose(mWindow, true);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        container.activate(shader.get());
-        awesomeface.activate(shader.get());
+        container.activate(shader.get(), "tex1");
+        awesomeface.activate(shader.get(), "tex2");
         shader.activate();
         glBindVertexArray(VAO);
         for(GLuint i = 0; i < 10; i++)

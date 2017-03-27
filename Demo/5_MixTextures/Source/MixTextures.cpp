@@ -85,8 +85,8 @@ int main(int argc, char * argv[]) {
 
         glClear(GL_COLOR_BUFFER_BIT);
         shader.activate();
-        container.activate(shader.get());
-        awesomeface.activate(shader.get());
+        container.activate(shader.get(), "tex1");
+        awesomeface.activate(shader.get(), "tex2");
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

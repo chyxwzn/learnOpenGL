@@ -56,10 +56,9 @@ namespace Common
         glDeleteTextures(1, &mTexture);
     }
 
-    void Texture::activate(GLuint shader)
+    void Texture::activate(GLuint shader, std::string const& sampler)
     {
-        std::string uniform = "tex" + std::to_string(mUnit+1);
-        glUniform1i(glGetUniformLocation(shader, uniform.c_str()), mUnit);
+        glUniform1i(glGetUniformLocation(shader, sampler.c_str()), mUnit);
         glActiveTexture(GL_TEXTURE0 + mUnit);
         glBindTexture(GL_TEXTURE_2D, mTexture);
     }

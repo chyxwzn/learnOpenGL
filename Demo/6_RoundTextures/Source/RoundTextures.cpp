@@ -85,8 +85,8 @@ int main(int argc, char * argv[]) {
             glfwSetWindowShouldClose(mWindow, true);
 
         glClear(GL_COLOR_BUFFER_BIT);
-        container.activate(shader.get());
-        awesomeface.activate(shader.get());
+        container.activate(shader.get(), "tex1");
+        awesomeface.activate(shader.get(), "tex2");
         shader.activate();
         glm::mat4 trans;
         if (x == 0.75f && y > -0.75f && y < 0.75f)
