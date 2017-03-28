@@ -160,15 +160,15 @@ int main(int argc, char * argv[]) {
         model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(1.0f, -1.0f, 0.0f));
         model = glm::translate(model, glm::vec3(-0.5, 0.0, 0.0));
         glm::mat4 view;
-        view = camera.GetViewMatrix();
+        view = camera.getViewMatrix();
         glm::mat4 projection;	
-        projection = glm::perspective(camera.Zoom, (GLfloat)mWidth / (GLfloat)mHeight, 0.1f, 1000.0f);
+        projection = glm::perspective(camera.mZoom, (GLfloat)mWidth / (GLfloat)mHeight, 0.1f, 1000.0f);
         // Pass them to the shaders
         glUniformMatrix4fv(glGetUniformLocation(objectShader.get(), "model"), 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(glGetUniformLocation(objectShader.get(), "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(glGetUniformLocation(objectShader.get(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniform3f(glGetUniformLocation(objectShader.get(), "light.position"), lightPos.x, lightPos.y, lightPos.z);
-        glUniform3f(glGetUniformLocation(objectShader.get(), "viewPos"), camera.Position.x, camera.Position.y, camera.Position.z);
+        glUniform3f(glGetUniformLocation(objectShader.get(), "viewPos"), camera.mPosition.x, camera.mPosition.y, camera.mPosition.z);
         // Set lights properties
         glm::vec3 lightColor;
         lightColor.x = sin(glfwGetTime() * 2.0f);
@@ -214,13 +214,13 @@ void Do_Movement()
 {
     // Camera controls
     if(keys[GLFW_KEY_W])
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        camera.processKeyboard(FORWARD, deltaTime);
     if(keys[GLFW_KEY_S])
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        camera.processKeyboard(BACKWARD, deltaTime);
     if(keys[GLFW_KEY_A])
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        camera.processKeyboard(LEFT, deltaTime);
     if(keys[GLFW_KEY_D])
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+        camera.processKeyboard(RIGHT, deltaTime);
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -251,11 +251,11 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    camera.processMouseMovement(xoffset, yoffset);
 }	
 
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    camera.ProcessMouseScroll(yoffset);
+    camera.processMouseScroll(yoffset);
 }

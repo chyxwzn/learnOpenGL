@@ -58,6 +58,8 @@ int main(int argc, char * argv[]) {
     glfwSetKeyCallback(mWindow, key_callback);
     glfwSetCursorPosCallback(mWindow, mouse_callback);
     glfwSetScrollCallback(mWindow, scroll_callback);
+    // Options
+    glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     gladLoadGL();
     glfwGetFramebufferSize(mWindow, &w, &h);
@@ -150,9 +152,9 @@ int main(int argc, char * argv[]) {
 		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // Translate it down a bit so it's at the center of the scene
         model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// It's a bit too big for our scene, so scale it down
         glm::mat4 view;
-        view = camera.GetViewMatrix();
+        view = camera.getViewMatrix();
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(camera.Zoom), (GLfloat)mWidth / (GLfloat)mHeight, 0.1f, 1000.0f);
+		projection = glm::perspective(glm::radians(camera.mZoom), (GLfloat)mWidth / (GLfloat)mHeight, 0.1f, 1000.0f);
         // Pass them to the shaders
         glUniformMatrix4fv(glGetUniformLocation(objectShader.get(), "model"), 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(glGetUniformLocation(objectShader.get(), "view"), 1, GL_FALSE, glm::value_ptr(view));
@@ -185,13 +187,13 @@ void Do_Movement()
 {
     // Camera controls
     if(keys[GLFW_KEY_W])
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        camera.processKeyboard(FORWARD, deltaTime);
     if(keys[GLFW_KEY_S])
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        camera.processKeyboard(BACKWARD, deltaTime);
     if(keys[GLFW_KEY_A])
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        camera.processKeyboard(LEFT, deltaTime);
     if(keys[GLFW_KEY_D])
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+        camera.processKeyboard(RIGHT, deltaTime);
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -222,10 +224,10 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    camera.processMouseMovement(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    camera.ProcessMouseScroll(yoffset);
+    camera.processMouseScroll(yoffset);
 }
