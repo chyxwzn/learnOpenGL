@@ -12,22 +12,24 @@
 // Define Namespace
 namespace Common
 {
-    Mesh::Mesh(std::string const & filename) : Mesh()
+    Mesh::Mesh(std::string const & path, std::string const & filename) : Mesh()
     {
         // Load a Model from File
         Assimp::Importer loader;
+        auto index = path.rfind("Source");
+        std::string resPath = path.substr(0, index) + "Resource/";
+        std::string modelPath = resPath + filename;
         aiScene const * scene = loader.ReadFile(
-            PROJECT_SOURCE_DIR "/Mirage/Models/" + filename,
+            modelPath,
             aiProcessPreset_TargetRealtime_MaxQuality |
             aiProcess_OptimizeGraph                   |
             aiProcess_FlipUVs);
 
         // Walk the Tree of Scene Nodes
-        auto index = filename.find_last_of("/");
         if (!scene)
             fprintf(stderr, "%s\n", loader.GetErrorString());
         else
-            parse(filename.substr(0, index), scene->mRootNode, scene);
+            parse(resPath, scene->mRootNode, scene);
     }
 
     Mesh::Mesh(std::vector<Vertex> const & vertices,
@@ -83,7 +85,7 @@ namespace Common
             // Bind Correct Textures and Vertex Array Before Drawing
             glActiveTexture(GL_TEXTURE0 + unit);
             glBindTexture(GL_TEXTURE_2D, i.first);
-            glUniform1f(glGetUniformLocation(shader, uniform.c_str()), ++unit);
+            glUniform1i(glGetUniformLocation(shader, uniform.c_str()), ++unit);
         }
         glBindVertexArray(mVertexArray);
         glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
@@ -140,9 +142,11 @@ namespace Common
             std::string mode;
 
             // Load the Texture Image from File
-            aiString str; material->GetTexture(type, i, & str);
-            std::string filename = str.C_Str(); int width, height, channels;
-            filename = PROJECT_SOURCE_DIR "/Mirage/Models/" + path + "/" + filename;
+            aiString str;
+			material->GetTexture(type, i, & str);
+            std::string filename = str.C_Str();
+			int width, height, channels;
+            filename = path + filename;
             unsigned char * image = stbi_load(filename.c_str(), & width, & height, & channels, 0);
             if (!image)
                 fprintf(stderr, "%s %s\n", "Failed to Load Texture", filename.c_str());

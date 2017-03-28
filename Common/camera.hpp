@@ -20,7 +20,7 @@ enum Camera_Movement {
 const GLfloat YAW        = -90.0f;
 const GLfloat PITCH      =  0.0f;
 const GLfloat SPEED      =  3.0f;
-const GLfloat SENSITIVTY =  0.25f;
+const GLfloat SENSITIVTY =  0.2f;
 const GLfloat ZOOM       =  45.0f;
 
 
@@ -106,12 +106,13 @@ public:
     // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(GLfloat yoffset)
     {
-        if (this->Zoom >= 1.0f && this->Zoom <= 45.0f)
+        yoffset *= this->MouseSensitivity;
+        if (this->Zoom >= 1.0f && this->Zoom <= 89.0f)
             this->Zoom -= yoffset;
         if (this->Zoom <= 1.0f)
             this->Zoom = 1.0f;
-        if (this->Zoom >= 45.0f)
-            this->Zoom = 45.0f;
+        if (this->Zoom >= 89.0f)
+            this->Zoom = 89.0f;
     }
 
 private:

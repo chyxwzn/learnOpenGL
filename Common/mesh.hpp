@@ -31,7 +31,7 @@ namespace Common
         ~Mesh() { glDeleteVertexArrays(1, & mVertexArray); }
 
         // Implement Custom Constructors
-        Mesh(std::string const & filename);
+        Mesh(std::string const & path, std::string const & filename);
         Mesh(std::vector<Vertex> const & vertices,
              std::vector<GLuint> const & indices,
              std::map<GLuint, std::string> const & textures);
