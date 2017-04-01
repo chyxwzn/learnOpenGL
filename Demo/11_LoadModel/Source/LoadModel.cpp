@@ -3,7 +3,7 @@
 #include "shader.hpp"
 #include "texture.hpp"
 #include "camera.hpp"
-#include "mesh.hpp"
+#include "model.hpp"
 
 // Standard Headers
 #include <cstdio>
@@ -69,70 +69,10 @@ int main(int argc, char * argv[]) {
     objectShader.attach(__FILE__, "object.vert");
     objectShader.attach(__FILE__, "object.frag");
     objectShader.link();
-    Shader lightShader;
-    lightShader.attach(__FILE__, "light.vert");
-    lightShader.attach(__FILE__, "light.frag");
-    lightShader.link();
-
-    GLfloat vertices[] = {
-        // Positions
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-
-        -0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f, -0.5f,
-
-        -0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-    };
-    GLuint lightVAO, VBO;
-    glGenVertexArrays(1, &lightVAO);
-    glGenBuffers(1, &VBO);
-    glBindVertexArray(lightVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (GLvoid *)0);
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
 
     glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
     glEnable(GL_DEPTH_TEST);
-    glm::vec3 lightPos(0.0f, 0.8f, 2.0f);
-	Mesh nanosuit(__FILE__, "nanosuit.obj");
+	Model nanosuit(__FILE__, "nanosuit.obj");
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
         // Set frame time
@@ -161,23 +101,9 @@ int main(int argc, char * argv[]) {
         glUniformMatrix4fv(glGetUniformLocation(objectShader.get(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 		nanosuit.draw(objectShader.get());
 
-        lightShader.activate();
-        model = glm::mat4();
-        // Light attributes
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.05f));
-        glUniformMatrix4fv(glGetUniformLocation(lightShader.get(), "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(glGetUniformLocation(lightShader.get(), "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(lightShader.get(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-        glBindVertexArray(lightVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-
         // Flip Buffers and Draw
         glfwSwapBuffers(mWindow);
     }
-    glDeleteVertexArrays(1, &lightVAO);
-    glDeleteBuffers(1, &VBO);
     glfwTerminate();
     return EXIT_SUCCESS;
 }

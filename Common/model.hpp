@@ -22,17 +22,17 @@ namespace Common
         glm::vec2 uv;
     };
 
-    class Mesh
+    class Model
     {
     public:
 
         // Implement Default Constructor and Destructor
-         Mesh() { glGenVertexArrays(1, & mVertexArray); }
-        ~Mesh() { glDeleteVertexArrays(1, & mVertexArray); }
+         Model() { glGenVertexArrays(1, & mVertexArray); }
+        ~Model() { glDeleteVertexArrays(1, & mVertexArray); }
 
         // Implement Custom Constructors
-        Mesh(std::string const & path, std::string const & filename);
-        Mesh(std::vector<Vertex> const & vertices,
+        Model(std::string const & path, std::string const & filename);
+        Model(std::vector<Vertex> const & vertices,
              std::vector<GLuint> const & indices,
              std::map<GLuint, std::string> const & textures);
 
@@ -42,8 +42,8 @@ namespace Common
     private:
 
         // Disable Copying and Assignment
-        Mesh(Mesh const &) = delete;
-        Mesh & operator=(Mesh const &) = delete;
+        Model(Model const &) = delete;
+        Model & operator=(Model const &) = delete;
 
         // Private Member Functions
         void parse(std::string const & path, aiNode const * node, aiScene const * scene);
@@ -53,7 +53,7 @@ namespace Common
                                               aiTextureType type);
 
         // Private Member Containers
-        std::vector<std::unique_ptr<Mesh>> mSubMeshes;
+        std::vector<std::unique_ptr<Model>> mSubMeshes;
         std::vector<GLuint> mIndices;
         std::vector<Vertex> mVertices;
         std::map<GLuint, std::string> mTextures;

@@ -4,7 +4,7 @@
 #endif
 
 // Local Headers
-#include "mesh.hpp"
+#include "model.hpp"
 
 // System Headers
 #include <stb_image.h>
@@ -12,7 +12,7 @@
 // Define Namespace
 namespace Common
 {
-    Mesh::Mesh(std::string const & path, std::string const & filename) : Mesh()
+    Model::Model(std::string const & path, std::string const & filename) : Model()
     {
         // Load a Model from File
         Assimp::Importer loader;
@@ -32,7 +32,7 @@ namespace Common
             parse(resPath, scene->mRootNode, scene);
     }
 
-    Mesh::Mesh(std::vector<Vertex> const & vertices,
+    Model::Model(std::vector<Vertex> const & vertices,
                std::vector<GLuint> const & indices,
                std::map<GLuint, std::string> const & textures)
                     : mIndices(indices)
@@ -71,7 +71,7 @@ namespace Common
         glDeleteBuffers(1, & mElementBuffer);
     }
 
-    void Mesh::draw(GLuint shader)
+    void Model::draw(GLuint shader)
     {
         unsigned int unit = 0, diffuse = 0, specular = 0;
         for (auto &i : mSubMeshes)
@@ -89,9 +89,10 @@ namespace Common
         }
         glBindVertexArray(mVertexArray);
         glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
     }
 
-    void Mesh::parse(std::string const & path, aiNode const * node, aiScene const * scene)
+    void Model::parse(std::string const & path, aiNode const * node, aiScene const * scene)
     {
         for (unsigned int i = 0; i < node->mNumMeshes; i++)
             parse(path, scene->mMeshes[node->mMeshes[i]], scene);
@@ -99,9 +100,9 @@ namespace Common
             parse(path, node->mChildren[i], scene);
     }
 
-    void Mesh::parse(std::string const & path, aiMesh const * mesh, aiScene const * scene)
+    void Model::parse(std::string const & path, aiMesh const * mesh, aiScene const * scene)
     {
-        // Create Vertex Data from Mesh Node
+        // Create Vertex Data from Model Node
         std::vector<Vertex> vertices; Vertex vertex;
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
         {
@@ -112,24 +113,24 @@ namespace Common
             vertices.push_back(vertex);
         }
 
-        // Create Mesh Indices for Indexed Drawing
+        // Create Model Indices for Indexed Drawing
         std::vector<GLuint> indices;
         for (unsigned int i = 0; i < mesh->mNumFaces; i++)
             for (unsigned int j = 0; j < mesh->mFaces[i].mNumIndices; j++)
                 indices.push_back(mesh->mFaces[i].mIndices[j]);
 
-        // Load Mesh Textures into VRAM
+        // Load Model Textures into VRAM
         std::map<GLuint, std::string> textures;
         auto diffuse  = process(path, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_DIFFUSE);
         auto specular = process(path, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_SPECULAR);
         textures.insert(diffuse.begin(), diffuse.end());
         textures.insert(specular.begin(), specular.end());
 
-        // Create New Mesh Node
-        mSubMeshes.push_back(std::unique_ptr<Mesh>(new Mesh(vertices, indices, textures)));
+        // Create New Model Node
+        mSubMeshes.push_back(std::unique_ptr<Model>(new Model(vertices, indices, textures)));
     }
 
-    std::map<GLuint, std::string> Mesh::process(std::string const & path,
+    std::map<GLuint, std::string> Model::process(std::string const & path,
                                                 aiMaterial * material,
                                                 aiTextureType type)
     {
